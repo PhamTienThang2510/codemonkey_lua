@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 204db612eae0d3d4e9c01f04d269073a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Landing
-  LandingScoreBonus: 1
+  LandingScoreBonusMutipule: 1
 --- !u!1 &1269549949212706111
 GameObject:
   m_ObjectHideFlags: 0

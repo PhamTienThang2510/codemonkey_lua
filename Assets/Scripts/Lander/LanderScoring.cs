@@ -1,35 +1,7 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class Lander : MonoBehaviour
+public class LanderScoring : MonoBehaviour
 {
-    private Rigidbody2D _rigidbody2D;
-    private float force = 700f;
-    private void Awake()
-    {
-        _rigidbody2D = GetComponent<Rigidbody2D>();
-    }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-
-    }
-
-    private void FixedUpdate()
-    {
-        if (Keyboard.current.upArrowKey.isPressed)
-        {
-            GetComponent<Rigidbody2D>().AddForce(transform.up * force * Time.deltaTime);
-        }
-        if (Keyboard.current.leftArrowKey.isPressed)
-        {
-            GetComponent<Rigidbody2D>().AddTorque(100 * Time.deltaTime);
-        }
-        if (Keyboard.current.rightArrowKey.isPressed)
-        {
-            GetComponent<Rigidbody2D>().AddTorque(-100 * Time.deltaTime);
-        }
-    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // 1. Có phải landing pad không?
@@ -108,17 +80,8 @@ public class Lander : MonoBehaviour
         score *= landing.GetLandingScoreBonus();
 
         Debug.Log(
-            $"Landed!\n" +
-            $"Speed Score: {speedScore:F0}\n" +
-            $"Angle Score: {angleScore:F0}\n" +
-            $"Position Score: {positionScore:F0}\n" +
-            $"Bonus: {landing.GetLandingScoreBonus()}\n" +
-            $"TOTAL: {score:F0}"
+            $"Landed!" +
+            $" TOTAL: {score:F0}"
         );
-    }
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }
