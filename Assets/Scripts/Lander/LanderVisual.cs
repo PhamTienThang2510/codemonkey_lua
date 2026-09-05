@@ -21,20 +21,20 @@ public class LanderVisual : MonoBehaviour
     private void Start()
     {
         Init();
-        EventBus.Subscribe("LeftThruster", OnLeftFly);
-        EventBus.Subscribe("RightThruster", OnRightFly);
-        EventBus.Subscribe("MiddleThruster", OnMiddleFly);
-        EventBus.Subscribe("NoThruster", OnNoFly);
+        EventBus.Subscribe<OnLeftFlyEvent>(OnLeftFly);
+        EventBus.Subscribe<OnRightFlyEvent>(OnRightFly);
+        EventBus.Subscribe<OnMiddleFlyEvent>(OnMiddleFly);
+        EventBus.Subscribe<OnNoFlyEvent>(OnNoFly);
     }
 
     private void OnDestroy()
     {
         if (lander != null)
         {
-            EventBus.Unsubscribe("LeftThruster", OnLeftFly);
-            EventBus.Unsubscribe("RightThruster", OnRightFly);
-            EventBus.Unsubscribe("MiddleThruster", OnMiddleFly);
-            EventBus.Unsubscribe("NoThruster", OnNoFly);
+            EventBus.Unsubscribe<OnLeftFlyEvent>(OnLeftFly);
+            EventBus.Unsubscribe<OnRightFlyEvent>(OnRightFly);
+            EventBus.Unsubscribe<OnMiddleFlyEvent>(OnMiddleFly);
+            EventBus.Unsubscribe<OnNoFlyEvent>(OnNoFly);
         }
     }
     private void Init()
@@ -48,25 +48,25 @@ public class LanderVisual : MonoBehaviour
         var emissionModule = particleSystem.emission;
         emissionModule.enabled = isEnabled;
     }
-    private void OnLeftFly()
+    private void OnLeftFly(OnLeftFlyEvent e)
     {
         SetEmissionModule(Leftthruster, false);
         SetEmissionModule(Rightthruster, true);
         SetEmissionModule(Middlethruster, false);
     }
-    private void OnRightFly()
+    private void OnRightFly(OnRightFlyEvent e)
     {
         SetEmissionModule(Leftthruster, true);
         SetEmissionModule(Rightthruster, false);
         SetEmissionModule(Middlethruster, false);
     }
-    private void OnMiddleFly()
+    private void OnMiddleFly(OnMiddleFlyEvent e)
     {
         SetEmissionModule(Leftthruster, true);
         SetEmissionModule(Rightthruster, true);
         SetEmissionModule(Middlethruster, true);
     }
-    private void OnNoFly()
+    private void OnNoFly(OnNoFlyEvent e)
     {
         SetEmissionModule(Leftthruster, false);
         SetEmissionModule(Rightthruster, false);

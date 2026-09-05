@@ -1,36 +1,60 @@
-using System.Collections.Generic;
-using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public class EventBus
 {
-    public static Dictionary<string, Action> eventDictionary = new Dictionary<string, Action>();
-    public static void Subscribe(string eventName, Action listener)
+    // Lưu trữ các sự kiện dưới dạng Delegate chung để có thể chứa bất kỳ Action<T> nào
+    private static Dictionary<Type, Delegate> eventDictionary = new Dictionary<Type, Delegate>();
+
+    // Đăng ký sự kiện (Subscribe)
+    public static void Subscribe<T>(Action<T> listener)
     {
-        if (eventDictionary.TryGetValue(eventName, out Action thisEvent))
+        Type eventType = typeof(T);
+        if (eventDictionary.ContainsKey(eventType))
         {
-            thisEvent += listener;
-            eventDictionary[eventName] = thisEvent;
+            // Nếu đã có key, ta gộp thêm listener mới vào delegate hiện tại
+            eventDictionary[eventType] = Delegate.Combine(eventDictionary[eventType], listener);
         }
         else
         {
-            thisEvent += listener;
-            eventDictionary.Add(eventName, thisEvent);
+            // Nếu chưa có, ta thêm mới vào dictionary
+            eventDictionary.Add(eventType, listener);
         }
     }
-    public static void Unsubscribe(string eventName, Action listener)
+
+    // Hủy đăng ký sự kiện (Unsubscribe)
+    public static void Unsubscribe<T>(Action<T> listener)
     {
-        if (eventDictionary.TryGetValue(eventName, out Action thisEvent))
+        Type eventType = typeof(T);
+        if (eventDictionary.TryGetValue(eventType, out Delegate existingDelegate))
         {
-            thisEvent -= listener;
-            eventDictionary[eventName] = thisEvent;
+            // Xóa listener khỏi delegate hiện tại
+            Delegate currentDel = Delegate.Remove(existingDelegate, listener);
+
+            if (currentDel == null)
+            {
+                // Nếu không còn ai lắng nghe nữa thì xóa luôn key khỏi dictionary
+                eventDictionary.Remove(eventType);
+            }
+            else
+            {
+                // Cập nhật lại delegate sau khi xóa
+                eventDictionary[eventType] = currentDel;
+            }
         }
     }
-    public static void Publish(string eventName)
+
+    // Phát sự kiện (Publish)
+    public static void Publish<T>(T eventData)
     {
-        if (eventDictionary.TryGetValue(eventName, out Action thisEvent))
+        Type eventType = typeof(T);
+        if (eventDictionary.TryGetValue(eventType, out Delegate existingDelegate))
         {
-            thisEvent?.Invoke();
+            // Ép kiểu Delegate về Action<T> và gọi Invoke truyền dữ liệu vào
+            if (existingDelegate is Action<T> callback)
+            {
+                callback.Invoke(eventData);
+            }
         }
     }
 }
