@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - landing
+  - Fuel
   layers:
   - Default
   - TransparentFX
