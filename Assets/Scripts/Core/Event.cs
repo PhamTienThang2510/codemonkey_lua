@@ -28,3 +28,14 @@ public struct OnMiddleFlyEvent
 public struct OnNoFlyEvent
 {
 }
+public struct OnPlayerCrashEvent
+{
+}
+public struct OnFuelChangedEvent
+{
+    public float fuelAmount;
+    public OnFuelChangedEvent(float amount)
+    {
+        fuelAmount = amount;
+    }
+}

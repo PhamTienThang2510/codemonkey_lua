@@ -18,6 +18,8 @@ public class Lander : MonoBehaviour
     {
         EventBus.Subscribe<FuelPadTriggerEvent>(OnFuelPadTrigger);
         EventBus.Subscribe<OnCoinPickup>(OnCoinPickup);
+        // Báo cho UI biết mức fuel ban đầu
+        EventBus.Publish(new OnFuelChangedEvent(this.fuelAmount));
     }
 
     private void FixedUpdate()
@@ -63,11 +65,13 @@ public class Lander : MonoBehaviour
         if (isThrusting)
         {
             this.fuelAmount -= 2f * Time.fixedDeltaTime;
+            EventBus.Publish(new OnFuelChangedEvent(this.fuelAmount));
         }
     }
     private void OnFuelPadTrigger(FuelPadTriggerEvent e)
     {
         this.fuelAmount += e.fuelAmount;
+        EventBus.Publish(new OnFuelChangedEvent(this.fuelAmount));
     }
     private void OnCoinPickup(OnCoinPickup e)
     {

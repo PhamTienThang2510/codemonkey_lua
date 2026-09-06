@@ -8,6 +8,7 @@ public class LanderScoring : MonoBehaviour
         if (!collision.gameObject.CompareTag("landing"))
         {
             Debug.Log("Crashed! Not on landing pad!");
+            EventBus.Publish(new OnPlayerCrashEvent());
             return;
         }
 
@@ -17,6 +18,7 @@ public class LanderScoring : MonoBehaviour
         if (landing == null)
         {
             Debug.Log("Crashed! No landing script!");
+            EventBus.Publish(new OnPlayerCrashEvent());
             return;
         }
 
@@ -31,6 +33,7 @@ public class LanderScoring : MonoBehaviour
         if (speed > maxLandingSpeed)
         {
             Debug.Log("Crashed! Too fast!");
+            EventBus.Publish(new OnPlayerCrashEvent());
             return;
         }
 
@@ -41,6 +44,7 @@ public class LanderScoring : MonoBehaviour
         if (dotVector < minDot)
         {
             Debug.Log("Crashed! Wrong angle!");
+            EventBus.Publish(new OnPlayerCrashEvent());
             return;
         }
 
